@@ -30,20 +30,27 @@ def train_lightgbm_model():
     )
 
     # Full pipeline
-    full_pipeline = lgbm
+    full_pipeline = Pipeline(steps=[
+        ("preprocessor", preprocessor),
+        ("model", lgbm)
+    ])
+
+
     
 
-    # Train on TRAIN ONLY
-    lgbm.fit(X_train, y_train)
+    # Train 
+    full_pipeline.fit(X_train, y_train)
 
-
-    # Predictions on TEST ONLY
-    y_pred = lgbm.predict(X_test)
-    y_proba = lgbm.predict_proba(X_test)[:, 1]
+    # Predictions
+    y_pred = full_pipeline.predict(X_test)
+    y_proba = full_pipeline.predict_proba(X_test)[:, 1]
     
-    # Save the trained model
+   # MODEL VERSIONING
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     model_path = f"models/v2_lightgbm_{timestamp}.pkl"
+
+    joblib.dump(full_pipeline, model_path)
+    print(f"Model saved to: {model_path}")
 
     joblib.dump(lgbm, model_path)
 

@@ -25,7 +25,7 @@ def log_experiment(exp_id, model_name, features, acc, auc, notes):
         new_row.to_csv(log_path, mode="a", header=False, index=False)
     else:
         new_row.to_csv(log_path, index=False)
-
+        
 def train_baseline_model():
     df = load_data()
     X_train, X_test, y_train, y_test, preprocessor = prepare_data(df)
@@ -42,28 +42,27 @@ def train_baseline_model():
         ("classifier", model)
     ])
 
-    y = df["Churn"].map({"Yes": 1, "No": 0})
-    X = df.drop(columns=["Churn"])
+    # Train on TRAIN ONLY
+    full_pipeline.fit(X_train, y_train)
 
-    full_pipeline.fit(X, y)
+    # Predict on TEST ONLY
+    y_pred = full_pipeline.predict(X_test)
+    y_proba = full_pipeline.predict_proba(X_test)[:, 1]
 
-    y_pred = full_pipeline.predict(X)
-    y_proba = full_pipeline.predict_proba(X)[:, 1]
+    acc = accuracy_score(y_test, y_pred)
+    auc = roc_auc_score(y_test, y_proba)
 
-    acc = accuracy_score(y, y_pred)
-    auc = roc_auc_score(y, y_proba)
+    print("\n=== BASELINE LOGISTIC REGRESSION ===")
+    print(f"Accuracy: {acc:.4f}")
+    print(f"ROC-AUC: {auc:.4f}")
+    print("\nClassification Report:\n")
+    print(classification_report(y_test, y_pred))
 
-    print(f"Baseline Accuracy: {acc:.4f}")
-    print(f"Baseline ROC-AUC: {auc:.4f}")
-
-    # ----- MODEL VERSIONING -----
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     model_path = f"models/v1_baseline_logreg_{timestamp}.pkl"
-
     joblib.dump(full_pipeline, model_path)
     print(f"Model saved to: {model_path}")
 
-    # ----- LOG EXPERIMENT -----
     log_experiment(
         exp_id=f"exp_{timestamp}",
         model_name="LogisticRegression",
@@ -74,6 +73,3 @@ def train_baseline_model():
     )
 
     return full_pipeline
-if __name__ == "__main__":
-    train_baseline_model()
-    
