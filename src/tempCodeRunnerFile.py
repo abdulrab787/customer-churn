@@ -1,1 +1,1 @@
-src.config
+telco_churn
