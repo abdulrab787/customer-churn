@@ -1,3 +1,4 @@
 experiment_id,model,features,accuracy,roc_auc,notes
 exp_20260202_122608,LogisticRegression,all_features_v1,0.7501,0.8481,Baseline with balanced classes
 exp_20260202_125008,LightGBM,all_features_v1,0.8692,0.9578,LightGBM baseline with balanced classes
+exp_20260202_134529,LightGBM,all_features_v1,0.7651,0.8266,Business-optimized threshold=0.20
