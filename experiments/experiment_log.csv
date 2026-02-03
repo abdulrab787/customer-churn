@@ -5,3 +5,4 @@ exp_20260202_134529,LightGBM,all_features_v1,0.7651,0.8266,Business-optimized th
 exp_20260202_150832,LogisticRegression,all_features_v1,0.7388,0.8493,Baseline with balanced classes
 exp_20260202_152039,LightGBM,all_features_v1,0.7587,0.8292,Business-optimized threshold=0.21
 exp_20260203_101107,LightGBM,all_features_v1,0.7587,0.8292,Business-optimized threshold=0.21
+exp_20260203_122900,XGB+LightGBM_Ensemble,all_features_v2,0.9137,0.9816,"Weighted ensemble, xgb_weight=0.80"
