@@ -4,3 +4,4 @@ exp_20260202_125008,LightGBM,all_features_v1,0.8692,0.9578,LightGBM baseline wit
 exp_20260202_134529,LightGBM,all_features_v1,0.7651,0.8266,Business-optimized threshold=0.20
 exp_20260202_150832,LogisticRegression,all_features_v1,0.7388,0.8493,Baseline with balanced classes
 exp_20260202_152039,LightGBM,all_features_v1,0.7587,0.8292,Business-optimized threshold=0.21
+exp_20260203_101107,LightGBM,all_features_v1,0.7587,0.8292,Business-optimized threshold=0.21
