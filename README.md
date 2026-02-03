@@ -1,165 +1,164 @@
-📉 Customer Churn Prediction (End-to-End ML Project)
-📌 Project Overview
+# 🚀 Customer Churn Prediction — End-to-End ML Project (MLOps + Business Impact)
 
-Customer churn is one of the biggest revenue risks for subscription-based businesses.
-This project builds a production-style machine learning pipeline to predict customer churn and explain why customers leave — enabling targeted retention strategies.
+## 📌 Project Overview
 
-Business question:
+This project builds an **end-to-end machine learning system** to predict customer churn and optimize business decisions using **cost-sensitive modeling**. The pipeline follows industry best practices for reproducibility, experiment tracking, and model governance.
 
-Which customers are likely to churn, and what actions can reduce churn?
+**Business Goal:**
 
-🎯 Objectives
+> Identify customers likely to churn and prioritize retention actions in a cost-effective way.
 
-Predict customer churn with high recall
+---
 
-Understand key churn drivers
+## 🎯 Key Achievements
 
-Build reusable ML pipelines
+✅ Production-style ML pipeline (not just a notebook)
+✅ Feature engineering based on business intuition
+✅ Multiple models: Logistic Regression, LightGBM, XGBoost
+✅ **Weighted Ensemble (XGB + LightGBM)** for best performance
+✅ **Business-optimized decision threshold** (not default 0.5)
+✅ Model versioning & artifact management
+✅ **MLflow experiment tracking (MLOps-ready)**
+✅ Reproducible project structure suitable for real companies
 
-Create explainable and business-ready outputs
+---
 
-📂 Project Structure
+## 🗂️ Project Structure
+
+```
 customer-churn/
 │
 ├── data/
-│   ├── raw/                # Original dataset (Kaggle IBM Telco)
-│   ├── processed/          # Cleaned & encoded data
+│   ├── raw/
+│   └── processed/
+│
+├── models/
+│   ├── v1_baseline_logreg_*.pkl
+│   ├── v2_lightgbm_*.pkl
+│   └── v3_ensemble_*.pkl
+│
+├── experiments/
+│   └── experiment_log.csv
+│
+├── mlruns/                     # MLflow experiment logs
+│
+├── src/
+│   ├── __init__.py
+│   ├── preprocessing.py       # Feature engineering + pipeline
+│   ├── model_baseline.py      # Logistic Regression
+│   ├── model_lightgbm.py      # LightGBM model
+│   ├── model_ensemble.py      # XGB + LightGBM Ensemble
+│   ├── business_metrics.py    # Cost-sensitive thresholding
+│   └── mlflow_utils.py        # MLflow helpers
+│
+├── tests/
+│   ├── test_baseline.py
+│   ├── test_lightgbm.py
+│   └── test_ensemble.py
 │
 ├── notebooks/
 │   ├── 01_eda.ipynb
-│   ├── 02_feature_engineering.ipynb
-│   ├── 03_modeling.ipynb
-│   ├── 04_shap_explainability.ipynb
+│   └── 02_preprocessing.ipynb
 │
-├── src/
-│   ├── preprocessing.py    # Reusable feature pipeline
-│   ├── train.py             # Model training & selection
-│   ├── evaluate.py          # Metrics
-│   └── predict.py           # Inference script
-│
-├── models/
-│   └── best_model.pkl
-│
-├── reports/
-│   ├── eda_summary.md
-│   └── shap_insights.md
-│
-├── README.md
-├── requirements.txt
-└── .gitignore
+├── .gitignore
+└── README.md
+```
 
-🔍 Exploratory Data Analysis (EDA)
+---
 
-Key insights:
+## 🔍 Feature Engineering (Why This Matters)
 
-Month-to-month contracts have the highest churn
+We engineered domain-aware features such as:
 
-High MonthlyCharges strongly increase churn risk
+* **Tenure bins:** capturing customer lifecycle risk
+* **Spending behavior:** `AvgMonthlySpend`, `HighSpender`
+* **ContractRisk score:** mapping contract types to risk levels
+* **Family size interactions:** Partner + Dependents
+* **Log transforms:** stabilizing skewed distributions
 
-Short-tenure customers are most vulnerable
+This alone gave a significant performance boost.
 
-Fiber optic users churn more than DSL customers
+---
 
-📄 Full analysis: notebooks/01_eda.ipynb
+## 🧠 Modeling Approach
 
-🧪 Feature Engineering
+### 🔹 Baseline — Logistic Regression
 
-Cleaned TotalCharges
+* Balanced classes
+* Full sklearn Pipeline (preprocessing + model)
+* Accuracy: ~0.80
+* ROC-AUC: ~0.85
 
-Dropped non-predictive IDs
+### 🔹 LightGBM (Gradient Boosting)
 
-One-hot encoded categorical features
+* Handles nonlinear relationships
+* Better performance than Logistic Regression
+* Accuracy: ~0.84–0.86
 
-Scaled numerical features
+### 🔹 Final Model — **XGBoost + LightGBM Ensemble**
 
-Built reusable preprocessing pipeline
+* Weighted soft-voting ensemble
+* Empirically tuned weight
+* Best Accuracy: **~0.85–0.88**
 
-📄 Code: src/preprocessing.py
+---
 
-🤖 Modeling
+## 💰 Business Impact (Cost-Sensitive Decisioning)
 
-Models trained and compared:
+Instead of using the default **0.5 threshold**, we optimized decisions using a business cost model:
 
-Logistic Regression (baseline)
+* **Retention cost:** $100 per customer
+* **Acquisition cost:** $500 per lost customer
 
-Random Forest
+We selected a **business-optimal threshold (~0.42)** that minimizes total expected cost.
 
-XGBoost (best model)
+👉 This aligns the model with real business value, not just accuracy.
 
-Evaluation metrics:
+---
 
-ROC-AUC (ranking churners)
+## 📊 Experiment Tracking (MLflow)
 
-Recall (don’t miss churners)
+Every experiment logs:
 
-Precision (optimize retention budget)
+* Model parameters
+* Accuracy
+* ROC-AUC
+* Best business threshold
+* Estimated business cost
+* Trained model artifact
 
-📄 Training pipeline: src/train.py
+Run MLflow UI locally:
 
-🔎 Explainability (SHAP)
+```bash
+mlflow ui
+```
 
-SHAP was used to explain model predictions.
+Then open: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-Top churn drivers:
+---
 
-Month-to-month contracts
+## ▶️ How to Run the Project
 
-High monthly charges
+### 1) Install dependencies
 
-Short tenure
-
-Fiber optic internet
-
-📄 Insights: reports/shap_insights.md
-
-📈 Business Impact
-
-How this model can be used:
-
-Target high-risk customers with retention offers
-
-Incentivize long-term contracts
-
-Reduce churn-related revenue loss
-
-Improve customer onboarding strategy
-
-🚀 How to Run Locally
-git clone https://github.com/abdulrab787/customer-churn.git
-cd customer-churn
+```bash
 pip install -r requirements.txt
+```
 
-Run pipeline
-python src/train.py
+### 2) Train baseline model
 
-🛠 Tech Stack
+```bash
+python tests/test_baseline.py
+```
 
-Python, Pandas, NumPy
+### 3) Train LightGBM model
 
-Scikit-learn, XGBoost
+```bash
+python tests/test_lightgbm.py
+```
 
-SHAP (Explainability)
+### 4) Train Ensemble model
 
-VS Code, Git, GitHub
-
-Jupyter Notebook
-
-🧠 What This Project Demonstrates
-
-End-to-end ML thinking
-
-Business-oriented modeling
-
-Clean project structure
-
-Reproducible pipelines
-
-Explainable AI
-
-Professional Git workflow
-
-👤 Author
-
-Abdurrab Nizamuddeen
-Aspiring Data Analyst | Machine Learning | Analytics
-📫 GitHub: https://github.com/abdulrab787
+```bash
+python tests/test_ensemble.py
+```
